@@ -77,7 +77,8 @@ namespace ChoreographySimulator
                 TextAlignment = TextAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 IsReadOnly = true
-            }; 
+            };
+
             Util.SetBrush(textBox, element.GetColor());
 
             grid.Children.Add(textBox);
