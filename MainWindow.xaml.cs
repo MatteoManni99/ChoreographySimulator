@@ -141,5 +141,6 @@ namespace ChoreographySimulator
             else if (color.Equals("LightBlue")) textBox.Background = Brushes.LightBlue;
         }
     }
+
 }
 
