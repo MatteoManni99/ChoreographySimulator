@@ -27,7 +27,7 @@ namespace ChoreographySimulator
         {
             InitializeComponent();
 
-            //retrive 
+            //retriveee
             double windowWidth = this.Width;
             double windowHeight = this.Height;
 
