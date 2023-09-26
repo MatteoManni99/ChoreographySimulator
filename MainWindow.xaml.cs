@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -22,8 +23,8 @@ namespace ChoreographySimulator
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public List<Element> elements = new List<Element> { };
+
 
         public MainWindow()
         {
@@ -38,13 +39,26 @@ namespace ChoreographySimulator
             GridHandler.AddRows(gridBallroom, rowNumToAdd);
             GridHandler.AddColumns(gridBallroom, colNumToAdd);
 
-            int numRows1 = gridBallroom.RowDefinitions.Count;
-            int numColumns1 = gridBallroom.ColumnDefinitions.Count;
-            debug.Text = numRows.ToString() + " " + numColumns.ToString() + " " + numRows1.ToString() + " " + numColumns1;
+            int numRowsAfterAdd = gridBallroom.RowDefinitions.Count;
+            int numColumns1AfterAdd = gridBallroom.ColumnDefinitions.Count;
+            debug.Text = numRows.ToString() + " " + numColumns.ToString() + " " + numRowsAfterAdd.ToString() + " " + numColumns1AfterAdd;
 
             Element element1 = new Element(0, "fede", "LightBlue", 20, 20);
+            Move move1 = new Move(20, 20, 10, 10, 5);
+            element1.AddMove(move1);
             GridHandler.AddElement(gridBallroom, element1);
 
+        }
+        private void StartSimulation(Object sender, RoutedEventArgs e)
+        {
+            ControlClass.SetSimulationState(true);
+            debug.Text = "start simulation";
+
+        }
+        private void StopSimulation(Object sender, RoutedEventArgs e)
+        {
+            ControlClass.SetSimulationState(false);
+            debug.Text = "stop simulation";
         }
     }
 
@@ -87,6 +101,10 @@ namespace ChoreographySimulator
             Grid.SetRow(textBox, element.GetSpawnX());
             Grid.SetColumn(textBox, element.GetSpawnY());
         }
+        public static void MoveElement(Grid grid, Element element)
+        {
+
+        }
     }
 
     public class Element
@@ -96,7 +114,6 @@ namespace ChoreographySimulator
         private String color;
         private int spawnX;
         private int spawnY;
-
         private List<Move> moves = new List<Move> { };
 
         public Element(int id_, String name_, String color_, int spawnX_, int spawnY_)
@@ -113,26 +130,113 @@ namespace ChoreographySimulator
         public int GetCountMoves() { return this.moves.Count; }
         public Move GetMove(int index) { return moves[index]; }
 
-        //getter and setter
+        //getter
         public int GetId() { return id; }
         public String GetName() { return name; }
         public String GetColor() { return color; }
         public int GetSpawnX() { return spawnX; }
         public int GetSpawnY() { return spawnY; }
 
+        //setter
         public void SetId(int id_) { id = id_; }
         public void SetName(String name_) { name = name_; }
         public void SetColor(String color_) { color = color_; }
         public void SetSpawnX(int spawnX_) { spawnX = spawnX_; }
         public void SetSpawnY(int spawnY_) { spawnY = spawnY_; }
-
     }
     public class Move
     {
-        public int StartPointX { get; set; }
-        public int EndPointY { get; set; }
-        public int Time { get; set; }
+        private Point start;
+        private Point end;
+        private int time;
+        private List<Point> path = new List<Point> { };
 
+        public Move(int startX, int startY, int endX, int endY, int time_)
+        {
+            start = new Point(startX, startY);
+            end = new Point(endX, endY);
+            time = time_;
+        }
+        public void EvaluateAndSetPath()
+        {
+            int distX = end.GetX() - start.GetX();
+            int distY = end.GetY() - start.GetY();
+            float squareRatio = (float)distX / distY;
+            float decimalPart = squareRatio - (float)Math.Floor(squareRatio);
+
+            //TODO rimpiazzare con uno switch
+
+            if (distX == 0)     //the 2 points are in the same column
+            {
+                while (!end.IsEqualTo(path[path.Count - 1]))
+                {
+
+                }
+            }
+            else if (distY == 0)    //the 2 points are in the same row
+            {
+                while (!end.IsEqualTo(path[path.Count - 1]))
+                {
+
+                }
+            }
+            else if (distX == distY)    //we have to move on a square diagonal
+            {
+                while (!end.IsEqualTo(path[path.Count - 1]))
+                {
+
+                }
+            }
+            else if (decimalPart > 0.5)     //it's a vertical rectangle
+            {
+                while (!end.IsEqualTo(path[path.Count - 1]))
+                {
+
+
+                }
+            }
+            else if (decimalPart <= 0.5)    //it's a horizontal rectangle
+            {
+                while (!end.IsEqualTo(path[path.Count - 1]))
+                {
+
+                }
+            }
+
+        }
+        //getter
+        public Point GetStartPoint() { return start; }
+        public Point GetEndPoint() { return end; }
+        public int GetTime() { return time; }
+
+    }
+
+    public class Point
+    {
+        private int x;
+        private int y;
+
+        public Point(int x_, int y_)
+        {
+            x = x_;
+            y = y_;
+        }
+        public int GetX() { return x; }
+        public int GetY() { return y; }
+
+        public bool IsEqualTo(Point anOtherPoint)
+        {
+            if (anOtherPoint.GetX() == this.x && anOtherPoint.GetY() == this.y) return true;
+            else return false;
+        }
+    }
+
+    public class ControlClass
+    {
+        private static bool simulationState;
+        ControlClass() { }
+        public static void SetSimulationState(bool simulationState_) { simulationState = simulationState_; }
+        public static bool GetSimulationState() { return simulationState; }
     }
     public class Util
     {
@@ -142,6 +246,5 @@ namespace ChoreographySimulator
             else if (color.Equals("LightBlue")) textBox.Background = Brushes.LightBlue;
         }
     }
-
 }
 
