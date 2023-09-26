@@ -1,1 +1,1 @@
-# ChoreographySimulator
+# Choreography Simulator
