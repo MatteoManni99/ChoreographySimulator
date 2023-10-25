@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ChoreographySimulator
 {
@@ -13,7 +15,7 @@ namespace ChoreographySimulator
         private String color;
         private int spawnX;
         private int spawnY;
-        private List<Move> moves = new List<Move> { };
+        private List<Move> moves = new List<Move>();
 
         public Element(int id_, String name_, String color_, int spawnX_, int spawnY_)
         {
@@ -24,10 +26,26 @@ namespace ChoreographySimulator
             this.spawnY = spawnY_;
         }
 
-        public void AddMove(Move move) { this.moves.Append(move); }
+        public void AddMove(Move move) { moves.Add(move); }
         public void RemoveLastMove() { this.moves.RemoveAt(this.moves.Count - 1); }
         public int GetCountMoves() { return this.moves.Count; }
         public Move GetMove(int index) { return moves[index]; }
+        public List<Move> GetMoves(){ return moves; }
+
+        public String MovesToString()
+        {
+            int countMove = 0;
+            String toReturn = "";
+            foreach (Move move in moves)
+            {
+                countMove++;
+                toReturn += "move: " + countMove + ", time: " + move.GetTime() + "\n";
+                foreach (Point point in move.GetPath()) { toReturn += "(" + point + ")"; }
+                toReturn += "\n";
+            }
+            return toReturn;
+        }
+
 
         //getter
         public int GetId() { return id; }

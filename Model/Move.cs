@@ -23,23 +23,26 @@ namespace ChoreographySimulator
             this.start = start;
             this.end = end;
             this.time = time;
-            path.Add(end);
             path.Add(start);
             directionX = Math.Sign(end.GetX() - start.GetX());
-            directionY = Math.Sign(end.GetX() - start.GetX());
+            directionY = Math.Sign(end.GetY() - start.GetY());
             EvaluateAndSetPath();
         }
         
         //TODO improve efficiency
-        private Point[] NextCandidatePoints(Point p)
+        private List<Point> NextCandidatePoints(Point p)
         {
-            Point[] pointList = new Point[3];
+            List<Point> pointList = new List<Point>(); 
 
-            if (directionX>0 && directionY>0)
+            if (directionX == 0 || directionY == 0)
             {
-                pointList[0] = new Point(p.GetX() + 1, p.GetY());
-                pointList[1] = new Point(p.GetX() + 1, p.GetY() + 1);
-                pointList[2] = new Point(p.GetX(), p.GetY() + 1);
+                pointList.Add(new Point(p.GetX() + 1 * directionX, p.GetY() + 1 * directionY));
+            }
+            else
+            {
+                pointList.Add(new Point(p.GetX() + 1 * directionX, p.GetY()));
+                pointList.Add(new Point(p.GetX() + 1 * directionX, p.GetY() + 1 * directionY));
+                pointList.Add(new Point(p.GetX(), p.GetY() + 1 * directionY));
             }
 
             return pointList;
@@ -47,29 +50,50 @@ namespace ChoreographySimulator
 
         public void EvaluateAndSetPath()
         {
-            
+            //DEBUG
             int count = 0;
-            while(!LastPointInPath().IsEqualTo(end))
+
+            //Debug.WriteLine("start: " + start);
+            //Debug.WriteLine("end: " + end);
+            //Debug.WriteLine(LastPointInPath());
+
+            while (!LastPointInPath().IsEqualTo(end))
             {
-                Point[] pointsToEvaluate = NextCandidatePoints(LastPointInPath());
+                List<Point> pointsToEvaluate = NextCandidatePoints(LastPointInPath());
 
-                double bestDistance = 1000;
-                Point bestPoint = null;
-
+                
                 foreach (Point point in pointsToEvaluate)
                 {
-                    double newDistance = point.DistanceFromLine(start, end);
-                    Debug.WriteLine("point: " + point);
-                    Debug.WriteLine("->");
-                    Debug.WriteLine("newDistance: " + newDistance);
-                    if (newDistance < bestDistance)
-                    {
-                        bestDistance = newDistance;
-                        bestPoint = point;
-                    }
+                    //Debug.WriteLine(point.ToString());
                 }
-                path.Add(bestPoint);
 
+                double bestDistance = 10000; //initilizing the bestDistance to an high threshold
+                Point bestPoint = null;
+
+                if (pointsToEvaluate.Count == 1)
+                {
+                    path.Add(pointsToEvaluate[0]);
+                }
+                else
+                {
+                    foreach (Point point in pointsToEvaluate)
+                    {
+                        double newDistance = point.DistanceFromLine(start, end);
+                        
+                        //DEBUG
+                        //Debug.WriteLine("point: " + point + " -> " + newDistance);
+
+                        if (newDistance < bestDistance)
+                        {
+                            bestDistance = newDistance;
+                            bestPoint = point;
+                        }
+                    }
+                    path.Add(bestPoint);
+                }
+                
+
+                //DEBUG
                 count++;
                 if (count == 1000) break;
             }

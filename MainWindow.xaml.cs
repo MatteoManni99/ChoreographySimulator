@@ -1,10 +1,9 @@
 ﻿using System;
 
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using System.Windows;
 
-using static ChoreographySimulator.Element;
 
 namespace ChoreographySimulator
 {
@@ -35,17 +34,16 @@ namespace ChoreographySimulator
 
             //debug.Text = numRows.ToString() + " " + numColumns.ToString() + " " + numRowsAfterAdd.ToString() + " " + numColumns1AfterAdd;
 
-            Element element1 = new Element(0, "lorenzo", "LightBlue", 20, 20);
+            //TODO anzichè fare spawnX e spawnY mettere il new Point
+            Element element1 = new Element(0, "fede", "LightBlue", 20, 20);
             GridHandler.AddElement(gridBallroom, element1);
 
-            Move testMove = new Move(new Point(1, 1), new Point(16, 29), 1000);
+            Move testMove1 = new Move(new Point(3, 4), new Point(3, 10), 1000);
+            Move testMove2 = new Move(new Point(3, 10), new Point(10, 5), 1000);
 
-            //ciclo di debug
-            foreach (Point point in testMove.GetPath())
-            {
-                debug.Text += point.ToString() + "\n";
-            }
-
+            element1.AddMove(testMove1);
+            element1.AddMove(testMove2);
+            Debug.WriteLine(element1.MovesToString());
         }
         private void StartSimulation(Object sender, RoutedEventArgs e)
         {

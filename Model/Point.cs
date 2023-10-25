@@ -29,10 +29,8 @@ namespace ChoreographySimulator
             double m = (double)(linePoint2.GetY() - linePoint1.GetY()) / (linePoint2.GetX() - linePoint1.GetX());
             double q = linePoint1.GetY() - (m * linePoint1.GetX());
 
-           
-
-            double numerator = Math.Abs(y - m*x - q);
-            double denominator = Math.Sqrt(1 + m*m);
+            double numerator = Math.Abs(y - m * x - q);
+            double denominator = Math.Sqrt(1 + m * m);
             
             return numerator / denominator;
         }
